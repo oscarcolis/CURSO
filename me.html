@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>EstudiActivo | Temas, Subtemas y Tareas</title>
+  <!-- Google Font & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f4f9ff 0%, #e9f0fa 100%);
+      font-family: 'Inter', sans-serif;
+      padding: 2rem 1.5rem;
+      color: #1a2c3e;
+    }
+
+    /* contenedor principal */
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* encabezado amigable */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .hero-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1F5E8E, #2b9c76);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-section h1 i {
+      background: none;
+      color: #2b9c76;
+      font-size: 2.2rem;
+    }
+    .hero-section p {
+      font-size: 1.1rem;
+      color: #2c4b66;
+      margin-top: 10px;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(255,255,240,0.7);
+      backdrop-filter: blur(2px);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      display: inline-block;
+    }
+
+    /* grid de tarjetas temáticas */
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    /* cada tarjeta = tema completo */
+    .topic-card {
+      background: #ffffff;
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 32, 64, 0.12);
+      transition: all 0.25s ease;
+      overflow: hidden;
+      backdrop-filter: blur(0px);
+      border: 1px solid rgba(110, 160, 190, 0.2);
+    }
+    .topic-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 28px 38px -14px rgba(18, 52, 77, 0.2);
+    }
+
+    /* cabecera del tema */
+    .topic-header {
+      background: linear-gradient(110deg, #eef5fc 0%, #ffffff 100%);
+      padding: 1.4rem 1.8rem;
+      border-bottom: 2px solid #dde9f2;
+    }
+    .topic-header h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #154e6b;
+    }
+    .topic-header h2 i {
+      font-size: 1.8rem;
+      color: #2b9c76;
+    }
+    .topic-badge {
+      background: #e2f0f7;
+      color: #1b6b8a;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 50px;
+      display: inline-block;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    /* contenido: subtemas y tareas */
+    .topic-content {
+      padding: 1.6rem 1.8rem 2rem 1.8rem;
+    }
+
+    /* bloque de subtemas */
+    .subtemas-block {
+      background: #f8fcfd;
+      border-radius: 1.2rem;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.8rem;
+      border-left: 5px solid #47b5a2;
+    }
+    .subtemas-block h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1f5e6b;
+      margin-bottom: 14px;
+    }
+    .subtemas-block h3 i {
+      font-size: 1.2rem;
+      color: #47b5a2;
+    }
+    .subtemas-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .subtemas-list li {
+      background: white;
+      border-radius: 40px;
+      padding: 6px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #1f5e8e;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid #cde1ec;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.1s;
+    }
+    .subtemas-list li i {
+      font-size: 0.85rem;
+      color: #47b5a2;
+    }
+
+    /* bloque de tareas (tasks) */
+    .tareas-block {
+      background: #fffef7;
+      border-radius: 1.2rem;
+      padding: 1rem 1.2rem;
+      border: 1px solid #fbefcf;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    }
+    .tareas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      border-bottom: 2px dashed #ffdfaa;
+      padding-bottom: 8px;
+    }
+    .tareas-header h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #b86f2c;
+    }
+    .tareas-header h3 i {
+      color: #f39c12;
+    }
+    .task-progress {
+      background: #f0ede5;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #ad6b35;
+    }
+    .tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 12px 0 8px;
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      padding: 8px 12px;
+      border-radius: 60px;
+      transition: all 0.15s;
+      border: 1px solid #fae2bc;
+      cursor: pointer;
+    }
+    .task-item:hover {
+      background: #fff6ea;
+      transform: translateX(4px);
+    }
+    .task-item input {
+      width: 20px;
+      height: 20px;
+      accent-color: #2b9c76;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .task-item span {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #2c3e2f;
+      flex: 1;
+      transition: all 0.2s;
+    }
+    input[type="checkbox"]:checked + span {
+      text-decoration: line-through;
+      color: #7f8c8d;
+      opacity: 0.8;
+    }
+    .task-stats {
+      margin-top: 12px;
+      text-align: right;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #6b8f6e;
+      letter-spacing: 0.3px;
+      border-top: 1px solid #f5e2c1;
+      padding-top: 10px;
+    }
+
+    /* pie de página / nota */
+    .footer-note {
+      margin-top: 3.5rem;
+      text-align: center;
+      background: #fffff0;
+      border-radius: 2rem;
+      padding: 1rem 1.8rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #4f6f7f;
+      font-weight: 500;
+      font-size: 0.85rem;
+      border: 1px solid #e0e9f0;
+      backdrop-filter: blur(2px);
+    }
+    .footer-note i {
+      margin-right: 6px;
+      color: #47b5a2;
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 1rem;
+      }
+      .topic-header h2 {
+        font-size: 1.4rem;
+      }
+      .topic-content {
+        padding: 1.2rem;
+      }
+      .subtemas-list li {
+        font-size: 0.8rem;
+      }
+      .task-item span {
+        font-size: 0.85rem;
+      }
+      .hero-section h1 {
+        font-size: 1.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-container">
+  <div class="hero-section">
+    <h1>
+      <i class="fas fa-tasks"></i> 
+      Actividades del Estudiante
+    </h1>
+    <p><i class="fas fa-graduation-cap"></i> Organiza tu aprendizaje · Temas, subtemas y tareas a realizar</p>
+  </div>
+
+  <div class="topics-grid" id="topicsGrid">
+    <!-- TEMA 1: Programación Web -->
+    <div class="topic-card" data-topic-id="1">
+      <div class="topic-header">
+        <h2><i class="fab fa-html5"></i>Metodos Numericos</h2>
+        <div class="topic-badge"><i class="fas fa-code-branch"></i> Unidad esencial</div>
+      </div>
+      <div class="topic-content">
+        <!-- Subtemas desglosados -->
+        <div class="subtemas-block">
+          <h3><i class="fas fa-layer-group"></i> Subtemas</h3>
+          <ul class="subtemas-list">
+            <li><i class="fab fa-html5"></i>tema 1</li>
+            <li><i class="fab fa-css3-alt"></i>tema 2</li>
+            <li><i class="fab fa-js"></i> tema 3</li>
+            <li><i class="fas fa-mobile-alt"></i> tema 4</li>
+            <li><i class="fas fa-globe"></i>tema 5</li>
+          </ul>
+        </div>
+        <!-- TAREAS A REALIZAR (final) -->
+        <div class="tareas-block">
+          <div class="tareas-header">
+            <h3><i class="fas fa-check-double"></i> Tareas a realizar</h3>
+            <div class="task-progress" id="progressLabel-web">⬜ Progreso</div>
+          </div>
+          <div class="tasks-list" id="tasks-web">
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox"> 
+              <span>ejercicio 1</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox"> 
+              <span>ejercicio 2</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox"> 
+              <span>ejercicio 3</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox"> 
+              <span>ejercicio 4</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox"> 
+              <span>ejercicio 5</span>
+            </label>
+          </div>
+          <div class="task-stats" id="stats-web">0 / 5 completadas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 2: Estructuras de Datos -->
+    <div class="topic-card" data-topic-id="2">
+      <div class="topic-header">
+        <h2><i class="fas fa-database"></i> Estructuras de Datos</h2>
+        <div class="topic-badge"><i class="fas fa-brain"></i> subtema 1</div>
+      </div>
+      <div class="topic-content">
+        <div class="subtemas-block">
+          <h3><i class="fas fa-layer-group"></i> Subtemas</h3>
+          <ul class="subtemas-list">
+            <li><i class="fas fa-list-ul"></i> subtema1</li>
+            <li><i class="fas fa-layer-group"></i> subtema 2</li>
+            <li><i class="fas fa-tree"></i>subtema 3</li>
+            <li><i class="fas fa-chart-line"></i> subtema 4</li>
+            <li><i class="fas fa-sort"></i>subtema 5</li>
+          </ul>
+        </div>
+        <div class="tareas-block">
+          <div class="tareas-header">
+            <h3><i class="fas fa-check-double"></i> Tareas a realizar</h3>
+            <div class="task-progress" id="progressLabel-ds">⬜ Progreso</div>
+          </div>
+          <div class="tasks-list" id="tasks-ds">
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>ejercicio</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Resolver ejercicio</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Resolver ejercicio</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>resolver ejercicio</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>resolver ejercicio</span>
+            </label>
+          </div>
+          <div class="task-stats" id="stats-ds">0 / 5 completadas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 3: Cálculo Diferencial (Matemáticas) -->
+    <div class="topic-card" data-topic-id="3">
+      <div class="topic-header">
+        <h2><i class="fas fa-chart-line"></i> tema 3</h2>
+        <div class="topic-badge"><i class="fas fa-square-root-alt"></i> Análisis matemático</div>
+      </div>
+      <div class="topic-content">
+        <div class="subtemas-block">
+          <h3><i class="fas fa-layer-group"></i> Subtemas</h3>
+          <ul class="subtemas-list">
+            <li><i class="fas fa-infinity"></i> subtema 1</li>
+            <li><i class="fas fa-chart-simple"></i> subtema 2</li>
+            <li><i class="fas fa-ruler-combined"></i> subtema 3</li>
+            <li><i class="fas fa-waveform"></i> subtema 4</li>
+            <li><i class="fas fa-chart-line"></i> subtema 5</li>
+          </ul>
+        </div>
+        <div class="tareas-block">
+          <div class="tareas-header">
+            <h3><i class="fas fa-check-double"></i> Tareas a realizar</h3>
+            <div class="task-progress" id="progressLabel-calc">⬜ Progreso</div>
+          </div>
+          <div class="tasks-list" id="tasks-calc">
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Resolver 10 ejercicios </span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Calcular derivada por definición (f(x)=x²+3x)</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Aplicar regla de la cadena en funciones compuestas</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Problema de optimización: área máxima de un rectángulo</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Derivar funciones trigonométricas y exponenciales</span>
+            </label>
+          </div>
+          <div class="task-stats" id="stats-calc">0 / 5 completadas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMA 4: Bases de Datos (extra / más ejemplos)-->
+    <div class="topic-card" data-topic-id="4">
+      <div class="topic-header">
+        <h2><i class="fas fa-table"></i> tema</h2>
+        <div class="topic-badge"><i class="fas fa-server"></i> Modelado</div>
+      </div>
+      <div class="topic-content">
+        <div class="subtemas-block">
+          <h3><i class="fas fa-layer-group"></i> Subtemas</h3>
+          <ul class="subtemas-list">
+            <li><i class="fas fa-diagram-project"></i> subtema 1</li>
+            <li><i class="fas fa-key"></i> subtema 2</li>
+            <li><i class="fas fa-search"></i> subtema 3</li>
+            <li><i class="fas fa-link"></i> subtema 4</li>
+            <li><i class="fas fa-shield-alt"></i> subtema 5</li>
+          </ul>
+        </div>
+        <div class="tareas-block">
+          <div class="tareas-header">
+            <h3><i class="fas fa-check-double"></i> Tareas a realizar</h3>
+            <div class="task-progress" id="progressLabel-sql">⬜ Progreso</div>
+          </div>
+          <div class="tasks-list" id="tasks-sql">
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Diseñar </span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Escribir el codigo</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Crear un algoritmo</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>Realizar 10 interaciones con el metodo</span>
+            </label>
+            <label class="task-item">
+              <input type="checkbox" class="task-checkbox">
+              <span>crear un proyecto con mathlab</span>
+            </label>
+          </div>
+          <div class="task-stats" id="stats-sql">0 / 5 completadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <i class="fas fa-lightbulb"></i> Cada tema muestra sus subtemas desglosados y debajo las tareas específicas.  
+    <strong>✅ Marca las casillas para seguir tu progreso.</strong> ¡Completa tus actividades!
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Definir las configuraciones para cada tema según su ID
+    // Mapeamos cada bloque de tareas y su stats + contador
+    // Usamos selectores dinámicos para mantenerlo limpio y genérico.
+    const topics = document.querySelectorAll('.topic-card');
+    
+    function updateTaskStatsForCard(card) {
+      // dentro de cada card: buscar el contenedor de tareas, los checkboxes dentro de .tasks-list
+      const tasksContainer = card.querySelector('.tasks-list');
+      if (!tasksContainer) return;
+      const checkboxes = tasksContainer.querySelectorAll('.task-checkbox');
+      const total = checkboxes.length;
+      let completed = 0;
+      checkboxes.forEach(cb => {
+        if (cb.checked) completed++;
+      });
+      // actualizar el elemento .task-stats dentro de esta tarjeta (el div que muestra ej: "2 / 5 completadas")
+      const statsDiv = card.querySelector('.task-stats');
+      if (statsDiv) {
+        statsDiv.innerText = `${completed} / ${total} completadas`;
+      }
+      // también actualizar el badge pequeño de progreso opcional .task-progress (estilo amigable)
+      const progressBadge = card.querySelector('.task-progress');
+      if (progressBadge) {
+        const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+        if (completed === total) {
+          progressBadge.innerHTML = `<i class="fas fa-check-circle"></i> ¡Completado! ${percent}%`;
+          progressBadge.style.background = "#c8f0e1";
+          progressBadge.style.color = "#1f6e4a";
+        } else if (completed > 0) {
+          progressBadge.innerHTML = `<i class="fas fa-chart-simple"></i> Progreso: ${percent}%`;
+          progressBadge.style.background = "#fff0cf";
+          progressBadge.style.color = "#b9571a";
+        } else {
+          progressBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> Pendiente · 0%`;
+          progressBadge.style.background = "#f0ede5";
+          progressBadge.style.color = "#ad6b35";
+        }
+      }
+    }
+
+    // Función para inicializar stats y añadir event listeners a todos los checkboxes
+    function initAllTopics() {
+      topics.forEach(card => {
+        // Escuchar cambios en los checkboxes dentro de .tasks-list en esa tarjeta
+        const tasksListDiv = card.querySelector('.tasks-list');
+        if (!tasksListDiv) return;
+        const checkboxes = tasksListDiv.querySelectorAll('.task-checkbox');
+        // Agregar evento a cada checkbox
+        checkboxes.forEach(checkbox => {
+          // Remover event listeners previos para no duplicar (si se llama más veces, pero solo se inicializa una vez)
+          checkbox.removeEventListener('change', handleCheckboxChange);
+          checkbox.addEventListener('change', handleCheckboxChange);
+        });
+        // actualizar valores iniciales
+        updateTaskStatsForCard(card);
+      });
+    }
+
+    // Manejador genérico: al cambiar cualquier checkbox, actualiza la card correspondiente
+    function handleCheckboxChange(e) {
+      const taskItem = e.target.closest('.task-item');
+      if (!taskItem) return;
+      const card = taskItem.closest('.topic-card');
+      if (card) {
+        updateTaskStatsForCard(card);
+      }
+    }
+
+    // También necesitamos ejecutar después de potenciales cambios dinámicos, pero aquí no hay creación dinámica
+    // Sin embargo si se quisiera extender, funciona. Inicializar todo
+    initAllTopics();
+
+    // Opcional: observar si algún checkbox nuevo aparece? no es necesario, pero como garantía extra
+    // Se asegura de que si se añaden nuevos checkboxes manualmente (no es el caso), se tendrían que reinicializar, pero con la plantilla estática funciona perfecto.
+    // Para máxima seguridad, también barremos cambios por si se añade contenido en el futuro (no aplica ahora)
+  })();
+</script>
+</body>
+</html>
